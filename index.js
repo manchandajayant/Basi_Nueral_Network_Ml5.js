@@ -10,6 +10,10 @@ let notes = {
   C: 261.6256,
   D: 293.6648,
   E: 329.6276,
+  F: 349.2282,
+  G: 391.9954,
+  A: 440.0,
+  B: 493.8833,
 };
 
 let env, wave;
@@ -31,9 +35,11 @@ function setup() {
     ouputs: ["label"],
     task: "classification",
     debug: "true",
+    learningRate: 0.5,
   };
 
   model = ml5.neuralNetwork(options);
+  model.loadData("mouse_notes.json");
   background(200);
 }
 
@@ -47,8 +53,11 @@ function keyPressed() {
       epochs: 200,
     };
     model.train(options, whileTraining, finishedTraining);
+  } else if (key == "s") {
+    model.saveData("mouse_notes");
+  } else {
+    targetLabel = key.toUpperCase();
   }
-  targetLabel = key.toUpperCase();
 }
 
 function whileTraining(epoch, less) {
